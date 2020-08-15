@@ -4,6 +4,7 @@
 /* @var $content string */
 
 use app\assets\AppAsset;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 ?>
@@ -25,7 +26,12 @@ AppAsset::register($this);
 <div class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#"><?= Yii::$app->name ?></a>
+            <a class="navbar-brand" href="/"><?= Yii::$app->name ?></a>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="<?= Url::to('csv') ?>" class="nav-link">Generate CSV file</a>
+                </li>
+            </ul>
         </div>
     </nav>
     <main class="flex-fill">

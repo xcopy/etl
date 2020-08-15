@@ -11,7 +11,7 @@ use app\models\Member;
 class CsvController extends Controller
 {
     /** @var array */
-    public static $companies = [
+    public static array $companies = [
         'Google',
         'Apple Inc.',
         'Facebook',
@@ -30,7 +30,7 @@ class CsvController extends Controller
     ];
 
     /** @var array */
-    public static $departments = [
+    public static array $departments = [
         'Engineering & Design',
         'Operations & Support',
         'Product Management',
@@ -47,7 +47,7 @@ class CsvController extends Controller
     ];
 
     /** @var array */
-    public static $positions = [
+    public static array $positions = [
         '.NET Developer',
         'Application Developer',
         'Application Support Analyst',
@@ -123,19 +123,29 @@ class CsvController extends Controller
     ];
 
     /**
+     * @return string
+     */
+    public function actionIndex(): string
+    {
+        return $this->render('index', [
+            'factor' => count(self::$companies),
+            'options' => [10, 50, 100]
+        ]);
+    }
+
+    /**
      * Generates & saves sample CSV file
      *
-     * @param int $count
-     * @param int $save
-     * @return void|string
+     * @return void
      */
-    public function actionIndex($count = 15, $save = 0)
+    public function actionGenerate(): void
     {
+        // members for each company
+        $count = (int) Yii::$app->request->post('count', 100);
+
         $faker = FakerFactory::create();
 
         $filename = 'sample-'.date('d-m-Y').'-'.time().'.csv';
-
-        $per = floor($count / count(self::$companies));
 
         $separator = ';';
 
@@ -149,7 +159,7 @@ class CsvController extends Controller
                 $faker->sentence()
             ]);
 
-            for ($j = 1; $j <= $per; $j++) {
+            for ($j = 1; $j <= $count; $j++) {
                 $nationality = $faker->country;
                 $lastName = $faker->lastName;
 
@@ -211,17 +221,13 @@ class CsvController extends Controller
 
         $content = implode(PHP_EOL, $rows);
 
-        if ($save) {
-            try {
-                Yii::$app->response->sendContentAsFile($content, $filename, [
-                    'mimeType' => 'text/csv',
-                    'inline' => false
-                ])->send();
-            } catch (RangeNotSatisfiableHttpException $e) {
-                echo $e->getMessage();
-            }
-        } else {
-            return $this->render('index', ['content' => $content]);
+        try {
+            Yii::$app->response->sendContentAsFile($content, $filename, [
+                'mimeType' => 'text/csv',
+                'inline' => false
+            ])->send();
+        } catch (RangeNotSatisfiableHttpException $e) {
+            // todo
         }
     }
 
@@ -229,7 +235,8 @@ class CsvController extends Controller
      * @param int $interval
      * @return string
      */
-    private function getSampleBirthDate($interval = 30) {
+    private function getSampleBirthDate($interval = 30): string
+    {
         return FakerFactory::create()->dateTimeInInterval(
             '-'.$interval.' years',
             '+'.rand(1, 365).' days'
@@ -239,7 +246,8 @@ class CsvController extends Controller
     /**
      * @return string
      */
-    private function getSamplePassportNumber() {
+    private function getSamplePassportNumber(): string
+    {
         return strtoupper(FakerFactory::create()->bothify('??######'));
     }
 }
