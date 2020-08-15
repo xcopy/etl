@@ -26,6 +26,13 @@ use yii\db\ActiveQuery;
  */
 class Member extends ActiveRecord
 {
+    const GENDER_MALE = 'MALE';
+    const GENDER_FEMALE = 'FEMALE';
+
+    const ROLE_MEMBER = 'MEMBER';
+    const ROLE_SPOUSE = 'SPOUSE';
+    const ROLE_CHILD  = 'CHILD';
+
     /**
      * {@inheritdoc}
      */

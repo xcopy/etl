@@ -44,14 +44,17 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                [
+                    'pattern' => 'csv/<count:\d+>/<save:\d+>',
+                    'route' => 'csv/index',
+                    'defaults' => ['count' => 100, 'save' => 0]
+                ]
             ],
-        ],
-        */
+        ]
     ],
     'params' => $params,
 ];
