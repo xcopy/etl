@@ -23,9 +23,11 @@ class AppAsset extends AssetBundle
         'css/app.css',
     ];
     public $js = [
+        'js/app.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap4\BootstrapAsset',
+        FileUploadAsset::class
     ];
 }
