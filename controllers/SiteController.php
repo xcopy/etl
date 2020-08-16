@@ -20,14 +20,14 @@ class SiteController extends Controller
         $model = new UploadForm();
 
         if (Yii::$app->request->isPost) {
-            $model->sampleFile = UploadedFile::getInstance($model, 'sampleFile');
+            $model->file = UploadedFile::getInstance($model, 'file');
 
             Yii::$app->response->format = Response::FORMAT_JSON;
 
             return [
-                'uploaded' => $model->upload(),
-                'file' => $model->sampleFile,
-                'errors' => $model->getErrors('sampleFile')
+                'success' => $model->upload(),
+                'file' => $model->file,
+                'errors' => $model->getErrors('file')
             ];
         }
 

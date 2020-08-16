@@ -10,7 +10,7 @@ class UploadForm extends Model
     /**
      * @var UploadedFile
      */
-    public $sampleFile;
+    public $file;
 
     /**
      * {@inheritDoc}
@@ -19,7 +19,7 @@ class UploadForm extends Model
     {
         return [
             [
-                ['sampleFile'], 'file', 'skipOnEmpty' => false,
+                ['file'], 'file', 'skipOnEmpty' => false,
                 'checkExtensionByMimeType' => false, 'extensions' => 'csv'
             ],
         ];
@@ -33,11 +33,11 @@ class UploadForm extends Model
     public function upload(): bool
     {
         return $this->validate()
-            ? $this->sampleFile->saveAs(
+            ? $this->file->saveAs(
                 sprintf(
                     'uploads/%s.%s',
-                    $this->sampleFile->baseName,
-                    $this->sampleFile->extension
+                    $this->file->baseName,
+                    $this->file->extension
                 )
             )
             : false;

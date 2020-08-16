@@ -12,7 +12,7 @@
             ]) ?>
 
             <div class="custom-file">
-                <?= $form->field($model, 'sampleFile', ['options' => ['tag' => false]])
+                <?= $form->field($model, 'file', ['options' => ['tag' => false]])
                     ->fileInput(['class' => 'custom-file-input'])
                     ->label('Choose CSV file', ['class' => 'custom-file-label'])
                     ->error(['class' => 'form-text small'])
