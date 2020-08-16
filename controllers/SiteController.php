@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use yii\web\ErrorAction;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\web\UploadedFile;
@@ -10,6 +11,16 @@ use app\models\UploadForm;
 
 class SiteController extends Controller
 {
+    /**
+     * {@inheritDoc}
+     */
+    public function actions()
+    {
+        return [
+            'error' => ['class' => ErrorAction::class],
+        ];
+    }
+
     /**
      * Shows upload form & uploads file to local filesystem
      *
