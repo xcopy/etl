@@ -2,7 +2,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-8 offset-2">
+        <div class="col-md-8 offset-2" id="app">
             <?php $form = ActiveForm::begin([
                 'options' => [
                     'enctype' => 'multipart/form-data',
@@ -21,12 +21,15 @@
 
             <?php ActiveForm::end() ?>
 
-            <div id="alert" class="alert alert-dark d-none">
-                <div id="message" class="text-center">...</div>
-                <div id="spinner" class="align-items-center justify-content-center d-none">
+            <div v-bind:class="['alert', 'alert-dismissible', 'alert-' + alert.type, {'d-none': !alert.shown}]">
+                <div class="text-center" v-html="alert.message"></div>
+                <div class="d-flex align-items-center justify-content-center" v-if="alert.spinner">
                     <span class="spinner-border"></span>
                     <div class="ml-2">Importing data. Please wait&hellip;</div>
                 </div>
+                <button type="button" class="close" v-on:click="alert.shown = false">
+                    <span>&times;</span>
+                </button>
             </div>
         </div>
     </div>

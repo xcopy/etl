@@ -8,6 +8,8 @@
 namespace app\assets;
 
 use yii\web\AssetBundle;
+use yii\web\YiiAsset;
+use yii\bootstrap4\BootstrapPluginAsset;
 
 /**
  * Main application asset bundle.
@@ -20,14 +22,15 @@ class AppAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/app.css',
+        // 'css/app.css',
     ];
     public $js = [
         'js/app.js'
     ];
     public $depends = [
-        'yii\web\YiiAsset',
-        'yii\bootstrap4\BootstrapAsset',
-        FileUploadAsset::class
+        YiiAsset::class,
+        BootstrapPluginAsset::class,
+        FileUploadAsset::class,
+        VueAsset::class
     ];
 }

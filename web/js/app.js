@@ -1,53 +1,65 @@
-$(function () {
-    var $formText = $('.form-text', '#UploadForm'),
-        $alert = $('#alert'),
-        $spinner = $('#spinner', $alert),
-        $message = $('#message', $alert);
+(function () {
+    var alert = {
+        shown: false,
+        type: 'dark',
+        message: '',
+        spinner: false
+    };
 
-    $('#uploadform-file').fileupload({
-        maxNumberOfFiles: 1,
-        acceptFileTypes: /^text\/(plain|csv)$/i,
-        maxFileSize: 8e+8
-    }).on('fileuploadadd', function () {
-        $formText.empty();
-    }).on('fileuploadfail', function () {
-        $formText.text('Something went wrong. Please try again');
-        $alert.addClass('d-flex');
-    }).on('fileuploaddone', function (e, data) {
-        var file = data.result.file.name,
-            errors = data.result.errors;
+    new Vue({
+        el: '#app',
+        data: {
+            alert: Object.assign({}, alert)
+        },
+        mounted: function () {
+            var vm = this;
 
-        if (errors.length) {
-            errors.forEach(function (error) {
-                $formText
-                    .removeClass('text-success')
-                    .addClass('text-danger')
-                    .append('<div>' + error + '</div>');
-            });
-        } else {
-            $alert.removeClass('d-none alert-success alert-danger').addClass('alert-dark');
-            $spinner.addClass('d-flex');
-            $message.addClass('d-none');
+            $('#uploadform-file').fileupload({
+                maxNumberOfFiles: 1,
+                acceptFileTypes: /^text\/(plain|csv)$/i,
+                maxFileSize: 8e+8
+            }).on('fileuploadadd', function () {
+                Object.assign(vm.alert, alert);
+            }).on('fileuploaddone', function (e, data) {
+                var file = data.result.file.name,
+                    errors = data.result.errors,
+                    type = 'success',
+                    message = 'File "' + file + '" uploaded successfully';
 
-            $formText
-                .removeClass('text-danger')
-                .addClass('text-success')
-                .text('File "' + file + '" uploaded successfully');
+                if (errors.length) {
+                    errors = errors.map(function (error) {
+                        return '<div>' + error + '</div>';
+                    });
 
-            $.post('/progress', {file: file}, function (response) {
-                $alert.removeClass('alert-dark');
-                $spinner.removeClass('d-flex');
-                $message.removeClass('d-none');
+                    type = 'danger';
+                    message = errors.join('');
+                }
 
-                if (response.totalRows && response.totalMembers &&
-                    (response.totalRows === response.totalMembers)) {
-                    $alert.addClass('alert-success');
-                    $message.text('Import completed successfully (' + response.totalMembers + ' of ' + response.totalRows +')');
-                } else {
-                    $alert.addClass('alert-danger');
-                    $message.text('Something went wrong. Please try again');
+                Object.assign(vm.alert, {
+                    shown: true,
+                    type: type,
+                    message: message,
+                    spinner: errors.length === 0
+                });
+
+                if (errors.length === 0) {
+                    $.post('/progress', {file: file}, function (response) {
+                        var success = response.totalRows && response.totalMembers &&
+                            (response.totalRows === response.totalMembers);
+
+                        message = success
+                            ? 'Import completed successfully (' + response.totalMembers + ' of ' + response.totalRows + ')'
+                            : 'Something went wrong. Please try again';
+
+                        Object.assign(vm.alert, {
+                            shown: true,
+                            type: success ? 'success' : 'danger',
+                            message: message,
+                            spinner: false
+                        });
+                    });
                 }
             });
         }
     });
-});
+})();

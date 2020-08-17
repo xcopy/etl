@@ -4,14 +4,14 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec04822a5d8dc72818586b5d56573c92",
+    "content-hash": "4288b59768c19fe1458a8c9b6eeef35a",
     "packages": [
         {
             "name": "bower-asset/inputmask",
             "version": "3.3.11",
             "source": {
                 "type": "git",
-                "url": "git@github.com:RobinHerbots/Inputmask.git",
+                "url": "https://github.com/RobinHerbots/Inputmask.git",
                 "reference": "5e670ad62f50c738388d4dcec78d2888505ad77b"
             },
             "dist": {
@@ -446,6 +446,18 @@
             "dist": {
                 "type": "tar",
                 "url": "https://registry.npmjs.org/bootstrap/-/bootstrap-4.5.2.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/vue",
+            "version": "2.6.11",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/vue/-/vue-2.6.11.tgz"
             },
             "type": "npm-asset",
             "license": [
