@@ -33,13 +33,11 @@ class SiteController extends Controller
         if (Yii::$app->request->isPost) {
             $model->file = UploadedFile::getInstance($model, 'file');
 
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            return [
+            return $this->asJson([
                 'success' => $model->upload(),
                 'file' => $model->file,
                 'errors' => $model->getErrors('file')
-            ];
+            ]);
         }
 
         return $this->render('index', ['model' => $model]);
