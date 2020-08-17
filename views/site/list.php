@@ -16,8 +16,8 @@
                                 <th>Dep.</th>
                                 <th>Pos.</th>
                                 <th>Full name</th>
-                                <!--
                                 <th>Role</th>
+                                <!--
                                 <th>Gender</th>
                                 -->
                                 <th>Birth date</th>
@@ -28,11 +28,11 @@
                         <tbody>
                         <?php foreach ($company->members as $member): ?>
                             <tr>
-                                <td><?=$member->department->name ?></td>
-                                <td><?=$member->position->name ?></td>
+                                <td><?=$member->department ? $member->department->name : '' ?></td>
+                                <td><?=$member->position ? $member->position->name : '' ?></td>
                                 <td><?=$member->full_name ?></td>
-                                <!--
                                 <td><?=$member->role ?></td>
+                                <!--
                                 <td><?=$member->gender ?></td>
                                 -->
                                 <td><?=$member->birthDateText ?></td>

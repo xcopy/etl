@@ -71,8 +71,6 @@ class ProgressController extends Controller
                     $position_id = ($position = Position::findOne($condition))
                         ? $position->getPrimaryKey()
                         : $this->create(Position::class, $condition);
-                } else {
-                    $company_id = null;
                 }
 
                 // create member
