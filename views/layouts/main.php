@@ -27,16 +27,19 @@ AppAsset::register($this);
     <nav class="navbar navbar-expand navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="/"><?= Yii::$app->name ?></a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a href="<?= Url::to('list') ?>" class="nav-link">List</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="<?= Url::to('csv') ?>" class="nav-link">Generate CSV file</a>
-                    </li>
-                </ul>
-            </div>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a href="/" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?= Url::to('list') ?>" class="nav-link">List</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="<?= Url::to('csv') ?>" class="nav-link">Generate CSV file</a>
+                </li>
+            </ul>
         </div>
     </nav>
     <main class="flex-fill">
