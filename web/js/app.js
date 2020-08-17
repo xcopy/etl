@@ -10,7 +10,7 @@ $(function () {
     }).on('fileuploadfail', function () {
         $formText.text('Something went wrong. Please try again.');
     }).on('fileuploaddone', function (e, data) {
-        var fileName = data.result.file.name,
+        var file = data.result.file.name,
             errors = data.result.errors;
 
         if (errors.length) {
@@ -24,7 +24,11 @@ $(function () {
             $formText
                 .removeClass('text-danger')
                 .addClass('text-success')
-                .text('File "' + fileName + '" uploaded successfully');
+                .text('File "' + file + '" uploaded successfully');
+
+            $.post('/progress', {file: file}, function (response) {
+                console.log(response);
+            });
         }
     });
 });

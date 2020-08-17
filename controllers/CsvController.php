@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use phpDocumentor\Reflection\Types\Self_;
 use Yii;
 use yii\web\Controller;
 use yii\web\RangeNotSatisfiableHttpException;
@@ -212,11 +213,11 @@ class CsvController extends Controller
                         ]));
                     }
                 }
-
-                $rows[] = $separator;
             }
 
-            $rows[] = PHP_EOL;
+            if ($i + 1 < count(self::$companies)) {
+                $rows[] = '---';
+            }
         }
 
         $content = implode(PHP_EOL, $rows);

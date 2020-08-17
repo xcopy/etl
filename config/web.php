@@ -49,7 +49,8 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 'csv' => 'csv/index',
-                'csv/generate' => 'csv/generate'
+                'csv/generate' => 'csv/generate',
+                'progress' => 'progress/index'
             ],
         ]
     ],
