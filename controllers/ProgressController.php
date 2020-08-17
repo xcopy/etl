@@ -3,13 +3,12 @@
 namespace app\controllers;
 
 use Yii;
-use yii\web\Response;
 use yii\web\Controller;
 use app\models\Company;
 use app\models\Department;
 use app\models\Position;
 use app\models\Member;
-use app\models\Relation;
+// use app\models\Relation;
 use yii\db\ActiveRecord;
 
 class ProgressController extends Controller
@@ -26,26 +25,28 @@ class ProgressController extends Controller
         $containers = explode("\n---\n", $content);
 
         $totalRows = 0;
+        $totalMembers = 0;
 
-        // todo remove later
+        /*
         foreach ([Member::tableName(), Company::tableName(), Department::tableName(), Position::tableName()] as $table) {
             Yii::$app->db->createCommand('TRUNCATE TABLE '.$table.' CASCADE')->execute();
             Yii::$app->db->createCommand('ALTER SEQUENCE '.$table.'_id_seq RESTART WITH 1')->execute();
         }
+        */
 
         foreach ($containers as $container) {
-            /** @var $rows array */
             $rows = explode("\n", $container);
 
-            /** @var $company string */
             $company = array_shift($rows);
             [$name, $registration_number, $address, $description] = explode(';', $company);
 
             // create company
-            $company_id = $this->create(
-                Company::class,
-                compact('name', 'registration_number', 'address', 'description')
-            );
+            $company_id = ($company = Company::findOne(['name' => $name]))
+                ? $company->getPrimaryKey()
+                : $this->create(
+                    Company::class,
+                    compact('name', 'registration_number', 'address', 'description')
+                );
 
             // calculate number of members after company extracted
             $totalRows = $totalRows + count($rows);
@@ -81,10 +82,12 @@ class ProgressController extends Controller
                         'company_id', 'department_id', 'position_id'
                     )
                 );
+
+                if ($member_id) {
+                    $totalMembers++;
+                }
             }
         }
-
-        $totalMembers = Member::find()->count();
 
         return $this->asJson(compact('totalRows', 'totalMembers'));
     }
