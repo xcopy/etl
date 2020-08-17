@@ -2,7 +2,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-8 offset-2" id="app">
+        <div class="col-md-6 offset-3" id="app">
             <?php $form = ActiveForm::begin([
                 'options' => [
                     'enctype' => 'multipart/form-data',
