@@ -6,7 +6,7 @@
             <?php $form = ActiveForm::begin([
                 'options' => [
                     'enctype' => 'multipart/form-data',
-                    'class' => 'm-3',
+                    'class' => 'my-3',
                     'id' => $model->formName()
                 ]
             ]) ?>
@@ -20,6 +20,14 @@
             </div>
 
             <?php ActiveForm::end() ?>
+
+            <div id="alert" class="alert alert-dark d-none">
+                <div id="message" class="text-center">...</div>
+                <div id="spinner" class="align-items-center justify-content-center d-none">
+                    <span class="spinner-border"></span>
+                    <div class="ml-2">Importing data. Please wait&hellip;</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

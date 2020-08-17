@@ -26,7 +26,6 @@ AppAsset::register($this);
 <div class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/"><?= Yii::$app->name ?></a>
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a href="/" class="nav-link">Home</a>
