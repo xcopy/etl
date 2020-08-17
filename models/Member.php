@@ -109,4 +109,14 @@ class Member extends ActiveRecord
     {
         return $this->hasOne(Position::class, ['id' => 'position_id']);
     }
+
+    /**
+     * Returns formatted birth date
+     *
+     * @return string
+     */
+    public function getBirthDateText()
+    {
+        return date('d.m.Y', strtotime($this->birth_date));
+    }
 }

@@ -48,6 +48,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'list' => 'site/list',
                 'csv' => 'csv/index',
                 'csv/generate' => 'csv/generate',
                 'progress' => 'progress/index'

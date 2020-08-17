@@ -5,9 +5,9 @@ namespace app\controllers;
 use Yii;
 use yii\web\ErrorAction;
 use yii\web\Controller;
-use yii\web\Response;
 use yii\web\UploadedFile;
 use app\models\UploadForm;
+use app\models\Company;
 
 class SiteController extends Controller
 {
@@ -41,5 +41,17 @@ class SiteController extends Controller
         }
 
         return $this->render('index', ['model' => $model]);
+    }
+
+    /**
+     * Renders data
+     *
+     * @return string
+     */
+    public function actionList()
+    {
+        return $this->render('list', [
+            'companies' => Company::find()->with('members')->all()
+        ]);
     }
 }
