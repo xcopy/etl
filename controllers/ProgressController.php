@@ -18,8 +18,7 @@ class ProgressController extends Controller
         $content = file_get_contents(sprintf(
             '%s/uploads/%s',
             Yii::getAlias('@webroot'),
-            // todo: keep POST request only
-            Yii::$app->request->isPost ? Yii::$app->request->post('file') : Yii::$app->request->get('file')
+            Yii::$app->request->post('file')
         ));
 
         $containers = explode("\n---\n", $content);
