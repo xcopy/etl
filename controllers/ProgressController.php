@@ -9,6 +9,7 @@ use app\models\Company;
 use app\models\Department;
 use app\models\Position;
 use app\models\Member;
+use app\models\Relation;
 use yii\db\ActiveRecord;
 
 class ProgressController extends Controller
@@ -26,27 +27,28 @@ class ProgressController extends Controller
 
         $totalRows = 0;
 
-        /*
-        Member::deleteAll();
-        Position::deleteAll();
-        Department::deleteAll();
-        Company::deleteAll();
-        */
+        // todo remove later
+        foreach ([Member::tableName(), Company::tableName(), Department::tableName(), Position::tableName()] as $table) {
+            Yii::$app->db->createCommand('TRUNCATE TABLE '.$table.' CASCADE')->execute();
+            Yii::$app->db->createCommand('ALTER SEQUENCE '.$table.'_id_seq RESTART WITH 1')->execute();
+        }
 
         foreach ($containers as $container) {
+            /** @var $rows array */
             $rows = explode("\n", $container);
-
-            $totalRows = $totalRows + count($rows);
 
             /** @var $company string */
             $company = array_shift($rows);
             [$name, $registration_number, $address, $description] = explode(';', $company);
 
             // create company
-            $this->create(
+            $company_id = $this->create(
                 Company::class,
                 compact('name', 'registration_number', 'address', 'description')
             );
+
+            // calculate number of members after company extracted
+            $totalRows = $totalRows + count($rows);
 
             foreach ($rows as $row) {
                 [
@@ -54,23 +56,39 @@ class ProgressController extends Controller
                     $full_name, $role, $gender, $birth_date, $nationality, $passport_number
                 ] = explode(';', $row);
 
-                // create department & position
-                $this->create(Department::class, ['name' => $department]);
-                $this->create(Position::class, ['name' => $position]);
+                $department_id = null;
+                $position_id = null;
 
-                // create members
-                $this->create(
+                if ($role === Member::ROLE_MEMBER) {
+                    // find OR create department
+                    $condition = ['name' => $department];
+                    $department_id = ($department = Department::findOne($condition))
+                        ? $department->getPrimaryKey()
+                        : $this->create(Department::class, $condition);
+
+                    // find OR create position
+                    $condition = ['name' => $position];
+                    $position_id = ($position = Position::findOne($condition))
+                        ? $position->getPrimaryKey()
+                        : $this->create(Position::class, $condition);
+                } else {
+                    $company_id = null;
+                }
+
+                // create member
+                $member_id = $this->create(
                     Member::class,
-                    compact('full_name', 'role', 'gender', 'birth_date', 'nationality', 'passport_number')
+                    compact(
+                        'full_name','role', 'gender', 'birth_date', 'nationality', 'passport_number',
+                        'company_id', 'department_id', 'position_id'
+                    )
                 );
             }
         }
 
         $totalMembers = Member::find()->count();
 
-        Yii::$app->request->isPost && (Yii::$app->response->format = Response::FORMAT_JSON);
-
-        return compact('totalRows', 'totalMembers');
+        return $this->asJson(compact('totalRows', 'totalMembers'));
     }
 
     /**
@@ -78,12 +96,15 @@ class ProgressController extends Controller
      *
      * @param string $class model class name
      * @param array $attributes attributes/values
+     * @return int|null primary key on insert OR null on update
      */
-    private function create(string $class, array $attributes): void
+    private function create(string $class, array $attributes)
     {
         /** @var $model ActiveRecord */
         $model = new $class;
         $model->setAttributes($attributes);
         $model->save(); // will run validation anyway
+
+        return $model->getPrimaryKey();
     }
 }
