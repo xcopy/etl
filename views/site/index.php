@@ -27,7 +27,9 @@
                     <span class="spinner-border"></span>
                     <div class="ml-2">Importing data. Please wait&hellip;</div>
                 </div>
-                <button type="button" class="close" v-on:click="alert.shown = false">
+                <button type="button" class="close"
+                    v-if="!alert.spinner"
+                    v-on:click="alert.shown = false">
                     <span>&times;</span>
                 </button>
             </div>
