@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use Yii;
-use yii\db\ActiveRecord;
+use yii\data\Pagination;
 use yii\web\ErrorAction;
 use yii\web\Controller;
 use yii\web\UploadedFile;
@@ -45,19 +45,27 @@ class SiteController extends Controller
     }
 
     /**
-     * Renders data
+     * Renders paginated members
      *
      * @return string
      */
     public function actionList()
     {
-        /** @var $members ActiveRecord[] */
-        $members = Member::find()
+        $query = Member::find();
+
+        $count = $query->count();
+
+        $pagination = new Pagination(['totalCount' => $count]);
+
+        $members = $query
             ->with('company', 'department', 'position')
+            ->offset($pagination->offset)
+            ->limit($pagination->limit)
             ->all();
 
         return $this->render('list', [
-            'members' => $members
+            'members' => $members,
+            'pagination' => $pagination
         ]);
     }
 }
