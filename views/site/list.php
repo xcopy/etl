@@ -9,6 +9,7 @@ use app\models\Member;
 /** @var $companies array */
 /** @var $departments array */
 /** @var $positions array */
+/** @var $countries array */
 /** @var $members ActiveRecord[] */
 /** @var $member Member */
 /** @var $pagination Pagination */
@@ -18,28 +19,39 @@ use app\models\Member;
 
 <div class="container">
     <div class="my-3">
-        <form action="<?=Url::to('list') ?>" method="get" class="mb-3">
+        <form method="get" action="<?=Url::to('list') ?>">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-5">
                     <?=$this->render('_select', [
                         'key' => 'company_id',
                         'options' => $companies
                     ]) ?>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-5">
                     <?=$this->render('_select', [
                         'key' => 'department_id',
                         'options' => $departments
                     ]) ?>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
+                    <a href="<?=Url::to('list') ?>" class="btn btn-link btn-block">Reset</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
                     <?=$this->render('_select', [
                         'key' => 'position_id',
                         'options' => $positions
                     ]) ?>
                 </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-outline-primary btn-block">Select</button>
+                <div class="col-md-5">
+                    <?=$this->render('_select', [
+                        'key' => 'country_id',
+                        'options' => $countries
+                    ]) ?>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary btn-block">Select</button>
                 </div>
             </div>
         </form>
@@ -76,7 +88,7 @@ use app\models\Member;
                             <td><?=$member->gender ?></td>
                             -->
                             <td><?=$member->birthDateText ?></td>
-                            <td><?=$member->nationality ?></td>
+                            <td><?=$member->country->name ?></td>
                             <td><?=$member->passport_number ?></td>
                         </tr>
                     <?php endforeach; ?>

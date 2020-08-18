@@ -161,7 +161,7 @@ class CsvController extends Controller
             ]);
 
             for ($j = 1; $j <= $count; $j++) {
-                $nationality = $faker->country;
+                $country = $faker->country;
                 $lastName = $faker->lastName;
 
                 $required = [
@@ -174,7 +174,7 @@ class CsvController extends Controller
                     Member::ROLE_MEMBER,
                     Member::GENDER_MALE,
                     $this->getSampleBirthDate(rand(25, 35)),
-                    $nationality,
+                    $country,
                     $this->getSamplePassportNumber()
                 ]);
 
@@ -190,7 +190,7 @@ class CsvController extends Controller
                         Member::ROLE_SPOUSE,
                         Member::GENDER_FEMALE,
                         $this->getSampleBirthDate(rand(25, 35)),
-                        $nationality,
+                        $country,
                         $this->getSamplePassportNumber()
                     ]));
                 }
@@ -208,7 +208,7 @@ class CsvController extends Controller
                             Member::ROLE_CHILD,
                             $gender,
                             $this->getSampleBirthDate(rand(1, 10)),
-                            $nationality,
+                            $country,
                             $this->getSamplePassportNumber()
                         ]));
                     }

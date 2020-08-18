@@ -7,6 +7,7 @@ use yii\web\Controller;
 use app\models\Company;
 use app\models\Department;
 use app\models\Position;
+use app\models\Country;
 use app\models\Member;
 // use app\models\Relation;
 
@@ -50,7 +51,7 @@ class ProgressController extends Controller
             foreach ($rows as $row) {
                 [
                     $department, $position,
-                    $full_name, $role, $gender, $birth_date, $nationality, $passport_number
+                    $full_name, $role, $gender, $birth_date, $country, $passport_number
                 ] = explode(';', $row);
 
                 $department_id = null;
@@ -66,11 +67,15 @@ class ProgressController extends Controller
                         ->getPrimaryKey();
                 }
 
+                // find OR create country
+                $country_id = Country::firstOrCreate(['name' => $country])
+                    ->getPrimaryKey();
+
                 // create member
                 $member = new Member;
                 $member->setAttributes(compact(
-                    'full_name','role', 'gender', 'birth_date', 'nationality', 'passport_number',
-                    'company_id', 'department_id', 'position_id'
+                    'full_name','role', 'gender', 'birth_date', 'passport_number',
+                    'company_id', 'department_id', 'position_id', 'country_id'
                 ));
 
                 if ($member->save()) {

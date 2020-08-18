@@ -8,7 +8,7 @@ use yii\helpers\Inflector;
 
 ?>
 
-<label for="<?=$key ?>" class="m-0">
+<label for="<?=$key ?>" class="mb-3 w-100">
     <select id="<?=$key ?>" name="<?=$key ?>" class="custom-select">
         <option value="">- <?=Inflector::humanize($key) ?> -</option>
         <?php foreach ($options as $option): ?>

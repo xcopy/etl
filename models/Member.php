@@ -14,15 +14,16 @@ use yii\db\ActiveQuery;
  * @property string $role
  * @property string $gender
  * @property string $birth_date
- * @property string $nationality
  * @property string $passport_number
  * @property int|null $company_id
  * @property int|null $department_id
  * @property int|null $position_id
+ * @property int|null $country_id
  *
  * @property Company $company
  * @property Department $department
  * @property Position $position
+ * @property Country $country
  */
 class Member extends ActiveRecord
 {
@@ -47,17 +48,17 @@ class Member extends ActiveRecord
     public function rules()
     {
         return [
-            [['full_name', 'role', 'gender', 'birth_date', 'nationality', 'passport_number'], 'required'],
+            [['full_name', 'role', 'gender', 'birth_date', 'passport_number'], 'required'],
             [['birth_date'], 'safe'],
             [['company_id', 'department_id', 'position_id'], 'default', 'value' => null],
             [['company_id', 'department_id', 'position_id'], 'integer'],
             [['full_name'], 'string', 'max' => 200],
             [['role', 'gender'], 'string', 'max' => 10],
-            [['nationality'], 'string', 'max' => 100],
             [['passport_number'], 'string', 'max' => 20],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Company::class, 'targetAttribute' => ['company_id' => 'id']],
             [['department_id'], 'exist', 'skipOnError' => true, 'targetClass' => Department::class, 'targetAttribute' => ['department_id' => 'id']],
             [['position_id'], 'exist', 'skipOnError' => true, 'targetClass' => Position::class, 'targetAttribute' => ['position_id' => 'id']],
+            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::class, 'targetAttribute' => ['country_id' => 'id']],
         ];
     }
 
@@ -72,11 +73,11 @@ class Member extends ActiveRecord
             'role' => 'Role',
             'gender' => 'Gender',
             'birth_date' => 'Birth Date',
-            'nationality' => 'Nationality',
             'passport_number' => 'Passport Number',
             'company_id' => 'Company ID',
             'department_id' => 'Department ID',
             'position_id' => 'Position ID',
+            'country_id' => 'Country ID',
         ];
     }
 
@@ -108,6 +109,16 @@ class Member extends ActiveRecord
     public function getPosition()
     {
         return $this->hasOne(Position::class, ['id' => 'position_id']);
+    }
+
+    /**
+     * Gets query for [[Country]].
+     *
+     * @return ActiveQuery
+     */
+    public function getCountry()
+    {
+        return $this->hasOne(Country::class, ['id' => 'country_id']);
     }
 
     /**

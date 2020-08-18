@@ -12,6 +12,7 @@ use app\models\UploadForm;
 use app\models\Company;
 use app\models\Department;
 use app\models\Position;
+use app\models\Country;
 use app\models\Member;
 
 class SiteController extends Controller
@@ -67,9 +68,13 @@ class SiteController extends Controller
             ->orderBy(['name' => SORT_ASC])
             ->all();
 
+        $countries = Country::find()
+            ->orderBy(['name' => SORT_ASC])
+            ->all();
+
         $conditions = ArrayHelper::filter(
             Yii::$app->request->get(),
-            ['company_id', 'department_id', 'position_id']
+            ['company_id', 'department_id', 'position_id', 'country_id']
         );
 
         $conditions = array_filter($conditions, function ($value) {
@@ -85,7 +90,7 @@ class SiteController extends Controller
         $pagination = new Pagination(['totalCount' => (clone $query)->count()]);
 
         $members = $query
-            ->with('company', 'department', 'position')
+            ->with('company', 'department', 'position', 'country')
             ->offset($pagination->offset)
             ->limit($pagination->limit)
             ->all();
@@ -94,6 +99,7 @@ class SiteController extends Controller
             'companies',
             'departments',
             'positions',
+            'countries',
             'members',
             'pagination'
         ));
