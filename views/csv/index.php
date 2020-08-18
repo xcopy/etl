@@ -1,4 +1,12 @@
-<?php use yii\helpers\Url; ?>
+<?php
+
+use yii\helpers\Url;
+
+/** @var $options array */
+/** @var $option integer */
+/** @var $factor integer */
+
+?>
 
 <div class="container">
     <div class="row">
