@@ -2,16 +2,48 @@
 
 use yii\db\ActiveRecord;
 use yii\data\Pagination;
+use yii\web\View;
+use yii\helpers\Url;
 use app\models\Member;
 
+/** @var $companies array */
+/** @var $departments array */
+/** @var $positions array */
 /** @var $members ActiveRecord[] */
 /** @var $member Member */
 /** @var $pagination Pagination */
+/** @var $this View */
 
 ?>
 
 <div class="container">
     <div class="my-3">
+        <form action="<?=Url::to('list') ?>" method="get" class="mb-3">
+            <div class="row">
+                <div class="col-md-3">
+                    <?=$this->render('_select', [
+                        'key' => 'company_id',
+                        'options' => $companies
+                    ]) ?>
+                </div>
+                <div class="col-md-3">
+                    <?=$this->render('_select', [
+                        'key' => 'department_id',
+                        'options' => $departments
+                    ]) ?>
+                </div>
+                <div class="col-md-3">
+                    <?=$this->render('_select', [
+                        'key' => 'position_id',
+                        'options' => $positions
+                    ]) ?>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-outline-primary btn-block">Select</button>
+                </div>
+            </div>
+        </form>
+
         <?php if (count($members)): ?>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -51,33 +83,35 @@ use app\models\Member;
                     </tbody>
                 </table>
 
-                <nav>
-                    <ul class="pagination justify-content-center">
-                        <?php if (isset($pagination->links[Pagination::LINK_FIRST])): ?>
-                            <li class="page-item">
-                                <a class="page-link" href="<?=$pagination->links[Pagination::LINK_FIRST] ?>" title="First">&laquo;</a>
+                <?php if ($pagination->pageCount > 1): ?>
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            <?php if (isset($pagination->links[Pagination::LINK_FIRST])): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="<?=$pagination->links[Pagination::LINK_FIRST] ?>" title="First">&laquo;</a>
+                                </li>
+                            <?php endif ?>
+                            <?php if (isset($pagination->links[Pagination::LINK_PREV])): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="<?=$pagination->links[Pagination::LINK_PREV] ?>">Prev</a>
+                                </li>
+                            <?php endif ?>
+                            <li class="page-item active">
+                                <a class="page-link" href="#"><?=$pagination->page + 1 ?></a>
                             </li>
-                        <?php endif ?>
-                        <?php if (isset($pagination->links[Pagination::LINK_PREV])): ?>
-                            <li class="page-item">
-                                <a class="page-link" href="<?=$pagination->links[Pagination::LINK_PREV] ?>">Prev</a>
-                            </li>
-                        <?php endif ?>
-                        <li class="page-item active">
-                            <a class="page-link" href="#"><?=$pagination->page + 1 ?></a>
-                        </li>
-                        <?php if (isset($pagination->links[Pagination::LINK_NEXT])): ?>
-                            <li class="page-item">
-                                <a class="page-link" href="<?=$pagination->links[Pagination::LINK_NEXT] ?>">Next</a>
-                            </li>
-                        <?php endif ?>
-                        <?php if (isset($pagination->links[Pagination::LINK_LAST])): ?>
-                            <li class="page-item">
-                                <a class="page-link" href="<?=$pagination->links[Pagination::LINK_LAST] ?>" title="Last">&raquo;</a>
-                            </li>
-                        <?php endif ?>
-                    </ul>
-                </nav>
+                            <?php if (isset($pagination->links[Pagination::LINK_NEXT])): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="<?=$pagination->links[Pagination::LINK_NEXT] ?>">Next</a>
+                                </li>
+                            <?php endif ?>
+                            <?php if (isset($pagination->links[Pagination::LINK_LAST])): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="<?=$pagination->links[Pagination::LINK_LAST] ?>" title="Last">&raquo;</a>
+                                </li>
+                            <?php endif ?>
+                        </ul>
+                    </nav>
+                <?php endif ?>
             </div>
         <?php else: ?>
             <div class="text-center">There are no records to display.</div>

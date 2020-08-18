@@ -7,7 +7,11 @@ use yii\data\Pagination;
 use yii\web\ErrorAction;
 use yii\web\Controller;
 use yii\web\UploadedFile;
+use yii\helpers\ArrayHelper;
 use app\models\UploadForm;
+use app\models\Company;
+use app\models\Department;
+use app\models\Position;
 use app\models\Member;
 
 class SiteController extends Controller
@@ -51,11 +55,34 @@ class SiteController extends Controller
      */
     public function actionList()
     {
+        $companies = Company::find()
+            ->orderBy(['name' => SORT_ASC])
+            ->all();
+
+        $departments = Department::find()
+            ->orderBy(['name' => SORT_ASC])
+            ->all();
+
+        $positions = Position::find()
+            ->orderBy(['name' => SORT_ASC])
+            ->all();
+
+        $conditions = ArrayHelper::filter(
+            Yii::$app->request->get(),
+            ['company_id', 'department_id', 'position_id']
+        );
+
+        $conditions = array_filter($conditions, function ($value) {
+            return (int) $value !== 0;
+        });
+
         $query = Member::find();
 
-        $count = $query->count();
+        if (!empty($conditions)) {
+            $query->where($conditions);
+        }
 
-        $pagination = new Pagination(['totalCount' => $count]);
+        $pagination = new Pagination(['totalCount' => (clone $query)->count()]);
 
         $members = $query
             ->with('company', 'department', 'position')
@@ -63,9 +90,12 @@ class SiteController extends Controller
             ->limit($pagination->limit)
             ->all();
 
-        return $this->render('list', [
-            'members' => $members,
-            'pagination' => $pagination
-        ]);
+        return $this->render('list', compact(
+            'companies',
+            'departments',
+            'positions',
+            'members',
+            'pagination'
+        ));
     }
 }
