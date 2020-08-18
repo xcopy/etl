@@ -9,7 +9,6 @@ use app\models\Department;
 use app\models\Position;
 use app\models\Member;
 // use app\models\Relation;
-use yii\db\ActiveRecord;
 
 class ProgressController extends Controller
 {
@@ -40,12 +39,10 @@ class ProgressController extends Controller
             [$name, $registration_number, $address, $description] = explode(';', $company);
 
             // create company
-            $company_id = ($company = Company::findOne(['name' => $name]))
-                ? $company->getPrimaryKey()
-                : $this->create(
-                    Company::class,
-                    compact('name', 'registration_number', 'address', 'description')
-                );
+            $company_id = Company::firstOrCreate(
+                ['name' => $name],
+                compact('name', 'registration_number', 'address', 'description')
+            )->getPrimaryKey();
 
             // calculate number of members after company extracted
             $totalRows = $totalRows + count($rows);
@@ -61,50 +58,27 @@ class ProgressController extends Controller
 
                 if ($role === Member::ROLE_MEMBER) {
                     // find OR create department
-                    $condition = ['name' => $department];
-                    $department_id = ($department = Department::findOne($condition))
-                        ? $department->getPrimaryKey()
-                        : $this->create(Department::class, $condition);
+                    $department_id = Department::firstOrCreate(['name' => $department])
+                        ->getPrimaryKey();
 
                     // find OR create position
-                    $condition = ['name' => $position];
-                    $position_id = ($position = Position::findOne($condition))
-                        ? $position->getPrimaryKey()
-                        : $this->create(Position::class, $condition);
+                    $position_id = Position::firstOrCreate(['name' => $position])
+                        ->getPrimaryKey();
                 }
 
                 // create member
-                $member_id = $this->create(
-                    Member::class,
-                    compact(
-                        'full_name','role', 'gender', 'birth_date', 'nationality', 'passport_number',
-                        'company_id', 'department_id', 'position_id'
-                    )
-                );
+                $member = new Member;
+                $member->setAttributes(compact(
+                    'full_name','role', 'gender', 'birth_date', 'nationality', 'passport_number',
+                    'company_id', 'department_id', 'position_id'
+                ));
 
-                if ($member_id) {
+                if ($member->save()) {
                     $totalMembers++;
                 }
             }
         }
 
         return $this->asJson(compact('totalRows', 'totalMembers'));
-    }
-
-    /**
-     * Creates record in database
-     *
-     * @param string $class model class name
-     * @param array $attributes attributes/values
-     * @return int|null primary key on insert OR null on update
-     */
-    private function create(string $class, array $attributes)
-    {
-        /** @var $model ActiveRecord */
-        $model = new $class;
-        $model->setAttributes($attributes);
-        $model->save(); // will run validation anyway
-
-        return $model->getPrimaryKey();
     }
 }

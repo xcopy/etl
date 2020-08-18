@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
+use app\db\ActiveRecordTrait;
 
 /**
  * This is the model class for table "departments".
@@ -16,6 +17,8 @@ use yii\db\ActiveQuery;
  */
 class Department extends ActiveRecord
 {
+    use ActiveRecordTrait;
+
     /**
      * {@inheritdoc}
      */
