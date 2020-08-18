@@ -48,13 +48,21 @@
                             (response.totalRows === response.totalMembers);
 
                         message = success
-                            ? 'Import completed successfully (' + response.totalMembers + ' of ' + response.totalRows + ')'
+                            ? 'Import completed successfully'
                             : 'Something went wrong. Please try again';
+
+                        message += ' (' + response.totalMembers + ' of ' + response.totalRows + ')';
 
                         Object.assign(vm.alert, {
                             shown: true,
                             type: success ? 'success' : 'danger',
                             message: message,
+                            spinner: false
+                        });
+                    }).fail(function (response) {
+                        Object.assign(vm.alert, {
+                            type: 'danger',
+                            message: 'Error ' + response.status + ': ' + response.statusText,
                             spinner: false
                         });
                     });
