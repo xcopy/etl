@@ -3,11 +3,12 @@
 namespace app\controllers;
 
 use Yii;
+use yii\db\ActiveRecord;
 use yii\web\ErrorAction;
 use yii\web\Controller;
 use yii\web\UploadedFile;
 use app\models\UploadForm;
-use app\models\Company;
+use app\models\Member;
 
 class SiteController extends Controller
 {
@@ -50,8 +51,13 @@ class SiteController extends Controller
      */
     public function actionList()
     {
+        /** @var $members ActiveRecord[] */
+        $members = Member::find()
+            ->with('company', 'department', 'position')
+            ->all();
+
         return $this->render('list', [
-            'companies' => Company::find()->with('members')->all()
+            'members' => $members
         ]);
     }
 }
