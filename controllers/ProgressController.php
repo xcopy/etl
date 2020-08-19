@@ -51,7 +51,7 @@ class ProgressController extends Controller
             foreach ($rows as $row) {
                 [
                     $department, $position,
-                    $full_name, $role, $gender, $birth_date, $country, $passport_number
+                    $family_id, $full_name, $role, $gender, $birth_date, $country, $passport_number
                 ] = explode(';', $row);
 
                 $department_id = null;
@@ -74,7 +74,7 @@ class ProgressController extends Controller
                 // create member
                 $member = new Member;
                 $member->setAttributes(compact(
-                    'full_name','role', 'gender', 'birth_date', 'passport_number',
+                    'family_id', 'full_name','role', 'gender', 'birth_date', 'passport_number',
                     'company_id', 'department_id', 'position_id', 'country_id'
                 ));
 

@@ -163,6 +163,11 @@ class CsvController extends Controller
             for ($j = 1; $j <= $count; $j++) {
                 $country = $faker->country;
                 $lastName = $faker->lastName;
+                $familyId = sprintf(
+                    '%s-%d',
+                    strtoupper(substr($company, 0, 2)),
+                    $faker->unique()->numberBetween(1000, 9999)
+                );
 
                 $required = [
                     $faker->randomElement(self::$departments),
@@ -170,6 +175,7 @@ class CsvController extends Controller
                 ];
 
                 $member = array_merge($required, [
+                    $familyId,
                     $faker->firstNameMale.' '.$lastName,
                     Member::ROLE_MEMBER,
                     Member::GENDER_MALE,
@@ -186,6 +192,7 @@ class CsvController extends Controller
                 // spouse
                 if ($hasSpouse = rand(0, 1)) {
                     $rows[] = implode($separator, array_merge($emptyValues, [
+                        $familyId,
                         $faker->firstNameFemale.' '.$lastName,
                         Member::ROLE_SPOUSE,
                         Member::GENDER_FEMALE,
@@ -204,6 +211,7 @@ class CsvController extends Controller
                         ]);
 
                         $rows[] = implode($separator, array_merge($emptyValues, [
+                            $familyId,
                             $faker->firstName(strtolower($gender)).' '.$lastName,
                             Member::ROLE_CHILD,
                             $gender,

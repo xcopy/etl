@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
+use yii\base\InvalidConfigException;
 
 /**
  * This is the model class for table "members".
@@ -19,11 +20,13 @@ use yii\db\ActiveQuery;
  * @property int|null $department_id
  * @property int|null $position_id
  * @property int|null $country_id
+ * @property string $family_id
  *
  * @property Company $company
+ * @property Country $country
  * @property Department $department
  * @property Position $position
- * @property Country $country
+ * @property Member[] $relatives
  */
 class Member extends ActiveRecord
 {
@@ -48,17 +51,18 @@ class Member extends ActiveRecord
     public function rules()
     {
         return [
-            [['full_name', 'role', 'gender', 'birth_date', 'passport_number'], 'required'],
+            [['family_id', 'full_name', 'role', 'gender', 'birth_date', 'passport_number'], 'required'],
             [['birth_date'], 'safe'],
-            [['company_id', 'department_id', 'position_id'], 'default', 'value' => null],
-            [['company_id', 'department_id', 'position_id'], 'integer'],
+            [['company_id', 'department_id', 'position_id', 'country_id'], 'default', 'value' => null],
+            [['company_id', 'department_id', 'position_id', 'country_id'], 'integer'],
+            [['family_id'], 'string', 'max' => 255],
             [['full_name'], 'string', 'max' => 200],
             [['role', 'gender'], 'string', 'max' => 10],
             [['passport_number'], 'string', 'max' => 20],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Company::class, 'targetAttribute' => ['company_id' => 'id']],
+            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::class, 'targetAttribute' => ['country_id' => 'id']],
             [['department_id'], 'exist', 'skipOnError' => true, 'targetClass' => Department::class, 'targetAttribute' => ['department_id' => 'id']],
             [['position_id'], 'exist', 'skipOnError' => true, 'targetClass' => Position::class, 'targetAttribute' => ['position_id' => 'id']],
-            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::class, 'targetAttribute' => ['country_id' => 'id']],
         ];
     }
 
@@ -73,11 +77,12 @@ class Member extends ActiveRecord
             'role' => 'Role',
             'gender' => 'Gender',
             'birth_date' => 'Birth Date',
-            'passport_number' => 'Passport Number',
-            'company_id' => 'Company ID',
-            'department_id' => 'Department ID',
-            'position_id' => 'Position ID',
-            'country_id' => 'Country ID',
+            'passport_number' => 'Pass. No.',
+            'company_id' => 'Company',
+            'department_id' => 'Department',
+            'position_id' => 'Position',
+            'country_id' => 'Country',
+            'family_id' => 'Family'
         ];
     }
 
@@ -89,6 +94,16 @@ class Member extends ActiveRecord
     public function getCompany()
     {
         return $this->hasOne(Company::class, ['id' => 'company_id']);
+    }
+
+    /**
+     * Gets query for [[Country]].
+     *
+     * @return ActiveQuery
+     */
+    public function getCountry()
+    {
+        return $this->hasOne(Country::class, ['id' => 'country_id']);
     }
 
     /**
@@ -112,13 +127,14 @@ class Member extends ActiveRecord
     }
 
     /**
-     * Gets query for [[Country]].
+     * Gets query for [[Relatives]].
      *
      * @return ActiveQuery
+     * @throws InvalidConfigException
      */
-    public function getCountry()
+    public function getRelatives()
     {
-        return $this->hasOne(Country::class, ['id' => 'country_id']);
+        return $this->hasMany(Member::class, ['id' => 'relative_id'])->viaTable('relations', ['member_id' => 'id']);
     }
 
     /**
