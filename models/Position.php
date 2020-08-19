@@ -28,6 +28,14 @@ class Position extends ActiveRecord
     }
 
     /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->name;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function rules()

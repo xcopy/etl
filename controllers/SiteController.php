@@ -56,6 +56,11 @@ class SiteController extends Controller
      */
     public function actionList()
     {
+        $columns = [
+            'id', 'company_id', 'department_id', 'position_id', 'family_id',
+            'full_name', 'role', 'birth_date', 'company_id', 'passport_number'
+        ];
+
         $companies = Company::find()
             ->orderBy(['name' => SORT_ASC])
             ->all();
@@ -96,6 +101,7 @@ class SiteController extends Controller
             ->all();
 
         return $this->render('list', compact(
+            'columns',
             'companies',
             'departments',
             'positions',

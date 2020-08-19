@@ -4,6 +4,7 @@ use yii\db\ActiveRecord;
 use yii\helpers\Inflector;
 
 /** @var $key string */
+/** @var $options array */
 /** @var $option ActiveRecord */
 
 ?>

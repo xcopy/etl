@@ -1,19 +1,17 @@
 <?php
 
-use yii\db\ActiveRecord;
 use yii\data\Pagination;
-use yii\web\View;
 use yii\helpers\Url;
-use app\models\Member;
 
+/** @var $columns string[] */
 /** @var $companies array */
 /** @var $departments array */
 /** @var $positions array */
 /** @var $countries array */
-/** @var $members ActiveRecord[] */
-/** @var $member Member */
+/** @var $members yii\db\ActiveRecord[] */
+/** @var $member app\models\Member */
 /** @var $pagination Pagination */
-/** @var $this View */
+/** @var $this yii\web\View */
 
 ?>
 
@@ -61,34 +59,23 @@ use app\models\Member;
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Company</th>
-                            <th>Department</th>
-                            <th>Position</th>
-                            <th>Name</th>
-                            <th>Role</th>
-                            <!--
-                            <th>Gender</th>
-                            -->
-                            <th>Birth date</th>
-                            <th>Nationality</th>
-                            <th>Pass. No.</th>
+                        <?php foreach ($columns as $column): ?>
+                            <th><?=$members[0]->getAttributeLabel($column) ?></th>
+                        <?php endforeach ?>
                         </tr>
                     </thead>
                     <tbody>
                     <?php foreach ($members as $i => $member): ?>
                         <tr>
-                            <td><?=$member->primaryKey ?></td>
-                            <td><?=$member->company->name ?></td>
-                            <td><?=$member->department ? $member->department->name : '' ?></td>
-                            <td><?=$member->position ? $member->position->name : '' ?></td>
+                            <td><?=$member->id ?></td>
+                            <td><?=$member->company ?></td>
+                            <td><?=$member->department ?? '' ?></td>
+                            <td><?=$member->position ?? '' ?></td>
+                            <td><?=$member->family_id ?></td>
                             <td><?=$member->full_name ?></td>
                             <td><?=$member->role ?></td>
-                            <!--
-                            <td><?=$member->gender ?></td>
-                            -->
                             <td><?=$member->birthDateText ?></td>
-                            <td><?=$member->country->name ?></td>
+                            <td><?=$member->country ?></td>
                             <td><?=$member->passport_number ?></td>
                         </tr>
                     <?php endforeach; ?>
